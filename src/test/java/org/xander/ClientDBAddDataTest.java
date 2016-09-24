@@ -1,13 +1,7 @@
 package org.xander;
 
-import com.mongodb.Block;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
 import org.bson.Document;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -15,13 +9,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static com.mongodb.client.model.Filters.*;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class ClientDBAddDataTest extends ClientDBAccessTest {
-
     @Test
     public void testAddCollection() {
     }
@@ -29,7 +19,7 @@ public class ClientDBAddDataTest extends ClientDBAccessTest {
     private void addData() {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         try {
-            db.getCollection("restaurants").insertOne(
+            collection.insertOne(
                     new Document("address",
                             new Document()
                                     .append("street", "2 Avenue")
@@ -55,7 +45,7 @@ public class ClientDBAddDataTest extends ClientDBAccessTest {
     }
 
     private void showAllCollections() {
-        FindIterable<Document> iterable = db.getCollection("restaurants").find();
+        FindIterable<Document> iterable = collection.find();
         printValues(iterable);
     }
 }

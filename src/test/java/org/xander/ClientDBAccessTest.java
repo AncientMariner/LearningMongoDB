@@ -3,6 +3,7 @@ package org.xander;
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import org.bson.Document;
@@ -17,21 +18,31 @@ public class ClientDBAccessTest {
     protected MongoClient mongoClient;
     protected MongoDatabase db;
     protected final String databaseName = "test";
+    public static final String HOST = "localhost";
+    public static final int PORT = 27017;
+    public static final String RESTAURANTS_COLLECTION = "restaurants";
+    protected MongoCollection<Document> collection;
 
     @Before
     public void setUp() {
-        String host = "localhost";
-        int port = 27017;
-        mongoClient = new MongoClient(host, port);
+        mongoClient = new MongoClient(HOST, PORT);
         db = mongoClient.getDatabase(databaseName);
+        collection = db.getCollection(RESTAURANTS_COLLECTION);
     }
 
     @Test
     public void testDBPresent() {
         MongoIterable<String> dbCollectionNames = db.listCollectionNames();
 
-        String expectedCollectionName = "restaurants";
-        assertThat("database name is present", dbCollectionNames.first(), is(expectedCollectionName));
+        MongoIterable<String> dbCollectionNames1 = dbCollectionNames;
+        for (String s : dbCollectionNames1) {
+            System.out.println(s);
+        }
+        assertThat("expected collection is not present", dbCollectionNames1.first(), is(RESTAURANTS_COLLECTION));
+    }
+
+    protected void cleanSpecificDatabase(String collectionName) {
+        db.getCollection(collectionName).drop();
     }
 
     protected void printValues(FindIterable<Document> iterable) {
