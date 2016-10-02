@@ -1,4 +1,4 @@
-package org.xander;
+package org.xander.dbAccess;
 
 import org.bson.Document;
 import org.junit.Test;

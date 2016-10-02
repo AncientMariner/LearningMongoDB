@@ -1,4 +1,4 @@
-package org.xander;
+package org.xander.dbAccess;
 
 import com.mongodb.client.FindIterable;
 import org.bson.Document;

@@ -1,4 +1,4 @@
-package org.xander;
+package org.xander.dbAccess;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
@@ -27,8 +27,6 @@ import static com.mongodb.client.model.Projections.exclude;
 import static com.mongodb.client.model.Projections.excludeId;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.xander.ClientDBAccessTest.HOST;
-import static org.xander.ClientDBAccessTest.PORT;
 
 public class ClientTestTemporaryDB {
     private MongoClient mongoClient;
@@ -41,7 +39,7 @@ public class ClientTestTemporaryDB {
 
     @Before
     public void setUp() {
-        mongoClient = new MongoClient(HOST, PORT);
+        mongoClient = new MongoClient(ClientDBAccessTest.HOST, ClientDBAccessTest.PORT);
         database = mongoClient.getDatabase(DATABASE_NAME);
         collection = database.getCollection(CARS_COLLECTION);
     }

@@ -1,11 +1,9 @@
-package org.xander;
+package org.xander.dbAccess;
 
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import org.bson.Document;
 import org.junit.Test;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

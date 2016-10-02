@@ -1,4 +1,4 @@
-package org.xander;
+package org.xander.dbAccess;
 
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
