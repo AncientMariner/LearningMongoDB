@@ -4,6 +4,8 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BulkWriteResult;
 import com.mongodb.CommandResult;
+import com.mongodb.DBCollection;
+import com.mongodb.MapReduceOutput;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import org.xander.model.Car;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -85,7 +88,6 @@ public class CarDaoTest {
     public void testCount() {
         long count = carDao.count();
         assertThat("there are more than 1 Volvo cars", count, is(1L));
-
     }
 
     @Test
@@ -96,50 +98,76 @@ public class CarDaoTest {
 
     @Test
     public void testExecuteQuery() {
-        carDao.executeQuery();
+        List<String> ids = carDao.executeQuery();
+        assertThat("more than 1 id is found", ids.size(), is(1));
     }
 
     @Test
     public void testExists() {
-        carDao.exists();
+        boolean exists = carDao.exists();
+        assertThat("Mercedes cars are not present", exists, is(true));
     }
 
-    @Test
-    public void testFind() {
-        carDao.find();
-    }
-
-    @Test
-    public void testGeoNear() {
-        carDao.geoNear();
-    }
+//    @Test
+//    public void shouldSupportGeoNearQueriesForAggregationWithDistanceField() {
+//        mongoTemplate.insert(new Venue("Penn Station", -73.99408, 40.75057));
+//        mongoTemplate.insert(new Venue("10gen Office", -73.99171, 40.738868));
+//        mongoTemplate.insert(new Venue("Flatiron Building", -73.988135, 40.741404));
+//
+//        mongoTemplate.indexOps(Venue.class).ensureIndex(new GeospatialIndex("location"));
+//
+//        NearQuery geoNear = NearQuery.near(-73, 40, Metrics.KILOMETERS).num(10).maxDistance(150);
+//
+//        Aggregation agg = newAggregation(Aggregation.geoNear(geoNear, "distance"));
+//        AggregationResults<DBObject> result = mongoTemplate.aggregate(agg, Venue.class, DBObject.class);
+//
+//        assertThat(result.getMappedResults(), hasSize(3));
+//
+//        DBObject firstResult = result.getMappedResults().get(0);
+//        assertThat(firstResult.containsField("distance"), is(true));
+//        assertThat((Double) firstResult.get("distance"), closeTo(117.620092203928, 0.00001));
+//    }
 
     @Test
     public void testGetCollection() {
-        carDao.getCollection();
+        DBCollection collection = carDao.getCollection();
+        assertThat("collection name is not cars", collection.getName(), is("cars"));
+        assertThat("db name is not test_another", collection.getDB().getName(), is("test_another"));
     }
 
     @Test
-    public void testConverted() {
-        carDao.getMongoConverter();
+    public void testGetCollectionNameBasedOnClass() {
+        String collectionNameBasedOnClass = carDao.getCollectionNameBasedOnClass(Car.class);
+        assertThat("collection name is not cars", collectionNameBasedOnClass, is("cars"));
+    }
 
+    @Test
+    public void testGetCollectionNamesSet() {
+        Set<String> collectionSet = carDao.getCollectionNamesSet();
+        assertThat("collection name is not present in the set", collectionSet.contains("cars"), is(true));
+    }
+
+    @Test
+    public void testCustomConverter() {
+        carDao.saveObjectWithCustomConverter();
     }
 
     @Test
     public void testScriptOperations() {
-        carDao.scriptOperations();
+        assertTrue("script execution was not successful", carDao.scriptOperations());
     }
 
     @Test
     public void testStream() {
-        carDao.stream();
+        int sizeOfTheCollection = carDao.stream();
+        assertThat("number of documents is 0", sizeOfTheCollection > 0, is(true));
     }
 
     @Test
     public void testMapReduce() {
-        carDao.mapReduce();
+        MapReduceOutput output = carDao.mapReduce();
+        output.results().forEach(System.out::println);
     }
-
 
     @After
     public void tearDown() {
