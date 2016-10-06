@@ -99,7 +99,7 @@ public class CarDao {
     public List<String> executeQuery(Query query) {
         final List<String> ids = new ArrayList<>();
 
-        mongoOps.executeQuery(query, "cars", new DocumentCallbackHandler() {
+        mongoOps.executeQuery(query, getCollectionNameBasedOnClass(Car.class), new DocumentCallbackHandler() {
             @Override
             public void processDocument(DBObject dbObject) throws MongoException, DataAccessException {
                 ids.add(dbObject.get("_id").toString());
