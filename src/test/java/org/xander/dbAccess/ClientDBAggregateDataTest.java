@@ -18,14 +18,14 @@ public class ClientDBAggregateDataTest extends ClientDBAccessTest {
     private void matchAndGroup() {
         AggregateIterable<Document> iterable = collection.aggregate(asList(
                 new Document("$match", new Document("borough", "Queens").append("cuisine", "Brazilian")),
-                new Document("$group", new Document("_id", "$address.zipcode").append("count", new Document("$sum", 1)))));
+                new Document("$group", new Document("_id", "$address.zipcode").append("countName", new Document("$sum", 1)))));
 
         printValues(iterable);
     }
 
     private void groupBySpecificField() {
         AggregateIterable<Document> iterable = collection.aggregate(asList(
-                new Document("$group", new Document("_id", "$borough").append("count", new Document("$sum", 1)))));
+                new Document("$group", new Document("_id", "$borough").append("countName", new Document("$sum", 1)))));
 
         printValues(iterable);
     }

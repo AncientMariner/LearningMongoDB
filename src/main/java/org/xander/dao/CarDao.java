@@ -68,7 +68,7 @@ public class CarDao {
     public AggregationResults<ArrayList> aggregate() {
         Aggregation aggregation = newAggregation(
                 match(where("price").lt(60000)),
-//                group("price").count().as("total"),
+//                group("price").countName().as("total"),
                 project("price").andExclude("_id"),
                 sort(Sort.Direction.DESC, "price"));
 
@@ -76,34 +76,27 @@ public class CarDao {
         return aggregate;
     }
 
-    public BulkWriteResult bulkOperation() {
-        Document newDocument1 = new Document("name", "Mercedes")
-                .append("price", 150000);
+    public BulkWriteResult bulkOperation(Document... documents) {
+        BulkOperations bulkOperations = mongoOps.bulkOps(BulkOperations.BulkMode.ORDERED,
+                                                         getCollectionNameBasedOnClass(Car.class));
+        for (Document document : documents) {
+            bulkOperations.insert(document);
+        }
 
-        Document newDocument2 = new Document("name", "Mercedes AMG")
-                .append("price", 250000);
-
-        BulkWriteResult bulkWriteResult = mongoOps
-                .bulkOps(BulkOperations.BulkMode.ORDERED, "cars")
-                .insert(newDocument1)
-                .insert(newDocument2)
-                .execute();
+        BulkWriteResult bulkWriteResult = bulkOperations.execute();
         return bulkWriteResult;
     }
 
-    public long count() {
-        Query query = Query.query(where("name").is("Volvo"));
+    public long countName(String key, String criteriaDefinition) {
+        Query query = Query.query(where(key).is(criteriaDefinition));
         return mongoOps.count(query, Car.class);
     }
 
-    public CommandResult executeCommand() {
-        return mongoOps.executeCommand("{ " + "\"count\" : \"" + "cars" + "\"" + " }");
+    public CommandResult executeCommand(String jsonCommand) {
+        return mongoOps.executeCommand(jsonCommand);
     }
 
-    public List<String> executeQuery() {
-        Query query = new Query();
-        query.addCriteria(where("name").is("Citroen"));
-
+    public List<String> executeQuery(Query query) {
         final List<String> ids = new ArrayList<>();
 
         mongoOps.executeQuery(query, "cars", new DocumentCallbackHandler() {
@@ -116,35 +109,36 @@ public class CarDao {
         return ids;
     }
 
-    public boolean exists() {
-        return mongoOps.exists(new Query().addCriteria(where("name").is("Mercedes")), "cars");
+    public boolean exists(Query query) {
+        return mongoOps.exists(query, getCollectionNameBasedOnClass(Car.class));
     }
 
     public Set<String> getCollectionNamesSet() {
         return mongoOps.getCollectionNames();
     }
 
-    public DBCollection getCollection() {
-        return mongoOps.getCollection(getCollectionNameBasedOnClass(Car.class));
+    public DBCollection getCollectionBasedOnName(String name) {
+        return mongoOps.getCollection(name);
     }
 
-    public String getCollectionNameBasedOnClass(Class<Car> carClass) {
-        return mongoOps.getCollectionName(carClass);
+    public String getCollectionNameBasedOnClass(Class<Car> aClass) {
+        return mongoOps.getCollectionName(aClass);
     }
 
 
-    public void saveObjectWithCustomConverter() {
-        String host = "localhost";
-        int port = 27017;
-        String dbName = "test_another";
+    public void saveObjectWithCustomConverter(Car car) {
+        final String host = "localhost";
+        final int port = 27017;
+        final String dbName = "test_another";
 
         SimpleMongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(new MongoClient(host, port), dbName);
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
                                                                     new MongoMappingContext());
 //        custom converter to avoid saving car object _class field into the db
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
 
-        new MongoTemplate(mongoDbFactory, converter).save(new Car("BMW", 50000));
+        mongoTemplate.save(car);
     }
 
     public boolean scriptOperations() {
@@ -158,7 +152,7 @@ public class CarDao {
         return echo;
     }
 
-    public int stream() {
+    public int streamCollection() {
         CloseableIterator<Car> closeableIterator = mongoOps.stream(Query.query(where("price").gt(40000)), Car.class);
 
         List<Car> cars = new ArrayList<>();
@@ -172,38 +166,38 @@ public class CarDao {
 
     public MapReduceOutput mapReduce() {
         DBCollection collection = mongoOps.getCollection(getCollectionNameBasedOnClass(Car.class));
-
         String map ="function () { " +
-                "var priceRange; " +
-                "if(this.price > 50000) " +
-                    "priceRange = 'moderate'; " +
-                "else " +
-                    "priceRange = 'cheap';" +
-                "emit(priceRange, {name: this.name});" +
-                "}";
+                        "var priceRange; " +
 
+                        "if(this.price > 50000) " +
+                            "priceRange = 'moderate'; " +
+                        "else " +
+                            "priceRange = 'cheap';" +
+
+                        "emit(priceRange, {name: this.name});" +
+                    "}";
         String reduce = "function (key, values) { "+
-                " var total = 0; "+
-                " values.forEach (function(doc) { total += 1; }); " +
-                " return {cars: total}; " +
-                "}";
+                            " var total = 0; "+
+                            " values.forEach (function(doc) { total += 1; }); " +
+                            " return {cars: total}; " +
+                        "}";
 
 //        String map ="function () {"+
-//                "emit('size', {count:1});"+
-//                "}";
+//                                  "emit('size', {countName:1});"+
+//                    "}";
 //
-//        String reduce = "function (key, values) { "+
-//                " total = 0; "+
-//                " for (var i in values) { "+
-//                " total += values[i].count; "+
-//                " } "+
-//                " return {count:total} }";
-
-        return collection.mapReduce(new MapReduceCommand(collection,
-                                                         map,
-                                                         reduce,
-                                                         null,
-                                                         MapReduceCommand.OutputType.INLINE,
-                                                         null));
+//        String reduce = "function (key, values) {"+
+//                          "total = 0; "+
+//                          "for (var i in values) { "+
+//                          "total += values[i].countName; "+
+//                        "} "+
+//                        "return {countName:total} }";
+        MapReduceCommand mapReduceCommand = new MapReduceCommand(collection,
+                                                                 map,
+                                                                 reduce,
+                                                                 null,
+                                                                 MapReduceCommand.OutputType.INLINE,
+                                                                 null);
+        return collection.mapReduce(mapReduceCommand);
     }
 }
