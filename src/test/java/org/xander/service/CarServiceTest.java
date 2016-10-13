@@ -6,9 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
 import org.xander.dao.CarDao;
+import org.xander.dao.CarNotFoundException;
 import org.xander.model.Car;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -31,9 +33,10 @@ public class CarServiceTest {
 
     @Test
     public void add() {
-        when(carService.get(anyString())).thenReturn(car);
+        when(carDao.get(anyString())).thenReturn(car);
 
         carService.get(anyString());
+
         verify(carDao).get(anyString());
         verifyNoMoreInteractions(carDao);
     }
@@ -41,23 +44,43 @@ public class CarServiceTest {
     @Test
     public void update() {
         carService.update(any(Car.class));
+
         verify(carDao).save(any(Car.class));
         verifyNoMoreInteractions(carDao);
     }
 
     @Test
     public void get() {
-        when(carService.get(anyString())).thenReturn(car);
+        when(carDao.get(anyString())).thenReturn(car);
 
         carService.get(anyString());
+
         verify(carDao).get(anyString());
+        verifyNoMoreInteractions(carDao);
+    }
+
+    @Test(expected = CarNotFoundException.class)
+    public void testFindOneNotFound() {
+        when(carDao.findOne(anyString())).thenReturn(Optional.empty());
+
+        carService.findOne(anyString());
+    }
+
+    @Test
+    public void testFindOneFound() {
+        when(carDao.findOne(anyString())).thenReturn(Optional.of(car));
+
+        carService.findOne(anyString());
+
+        verify(carDao).findOne(anyString());
         verifyNoMoreInteractions(carDao);
     }
 
     @Test
     public void getAll() {
-        when(carService.getAll()).thenReturn(new ArrayList<>());
+        when(carDao.getAll()).thenReturn(new ArrayList<>());
         carService.getAll();
+
         verify(carDao).getAll();
         verifyNoMoreInteractions(carDao);
     }
@@ -65,7 +88,17 @@ public class CarServiceTest {
     @Test
     public void remove() {
         carService.remove(anyString());
+
         verify(carDao).remove(anyString());
         verifyNoMoreInteractions(carDao);
     }
+
+    @Test
+    public void testRemoveByEntity() {
+        carService.removeByEntity(car);
+
+        verify(carDao).removeByEntity(any(Car.class));
+        verifyNoMoreInteractions(carDao);
+    }
+
 }

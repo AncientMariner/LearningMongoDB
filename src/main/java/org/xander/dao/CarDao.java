@@ -8,6 +8,7 @@ import com.mongodb.MapReduceCommand;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.WriteResult;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -33,6 +34,7 @@ import org.xander.model.Car;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -53,12 +55,21 @@ public class CarDao {
         return mongoOps.findOne(Query.query(where("id").is(id)), Car.class);
     }
 
+    public Optional<Car> findOne(String id) {
+        Optional<Car> one = Optional.ofNullable(mongoOps.findOne(Query.query(where("id").is(id)), Car.class));
+        return Optional.ofNullable(one.orElseThrow(() -> new CarNotFoundException(id)));
+    }
+
     public List<Car> getAll() {
         return mongoOps.findAll(Car.class);
     }
 
     public void remove(String id) {
         mongoOps.remove(Query.query(where("id").is(id)), Car.class);
+    }
+
+    public WriteResult removeByEntity(Car car) {
+        return mongoOps.remove(car);
     }
 
     public boolean collectionPresent(String collectionName) {
@@ -124,7 +135,6 @@ public class CarDao {
     public String getCollectionNameBasedOnClass(Class<Car> aClass) {
         return mongoOps.getCollectionName(aClass);
     }
-
 
     public void saveObjectWithCustomConverter(Car car) {
         final String host = "localhost";

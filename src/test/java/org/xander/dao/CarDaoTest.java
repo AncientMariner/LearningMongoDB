@@ -7,6 +7,7 @@ import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceOutput;
+import com.mongodb.WriteResult;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -22,9 +23,11 @@ import org.xander.model.Car;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -51,6 +54,7 @@ public class CarDaoTest {
                 idToRemove = carFromDb.getId();
             }
         }
+        assertNotNull("prepared entity does not have an id", idToRemove);
     }
 
     @Test
@@ -67,6 +71,51 @@ public class CarDaoTest {
 
             assertNull("car is not null", carDao.get(idToRemove));
         }
+    }
+
+    @Test
+    public void testRemoveByEntity() {
+        assertThat("id is not present", idToRemove != null, is(true));
+        Car actualCar = carDao.get(idToRemove);
+
+        assertNotNull("cound not get an entity for delete", actualCar);
+
+        WriteResult writeResult = carDao.removeByEntity(actualCar);
+
+        assertTrue("entity was not acknowledged", writeResult.wasAcknowledged());
+        assertFalse("there was an update of existing entity", writeResult.isUpdateOfExisting());
+        assertNull("upserted id is not null", writeResult.getUpsertedId());
+        assertThat("entity was not removed", writeResult.getN(), is(1));
+        assertNull("car was not removed", carDao.get(idToRemove));
+    }
+
+    @Test
+    public void testRemoveByEntityNotPresent() {
+        Car car = new Car();
+        String id = car.getId();
+        WriteResult writeResult = carDao.removeByEntity(car);
+
+        assertTrue("entity was not acknowledged", writeResult.wasAcknowledged());
+        assertFalse("there was an update of existing entity", writeResult.isUpdateOfExisting());
+        assertNull("upserted id is not null", writeResult.getUpsertedId());
+
+        assertThat("entity was not removed", writeResult.getN(), is(0));
+        assertNull("car was not removed", carDao.get(id));
+    }
+
+    @Test
+    public void testGetOptional() {
+        String id = car.getId();
+        Optional<Car> carOptional = carDao.findOne(id);
+        Car actualCar = carOptional.get();
+        assertThat("id is different", actualCar.getId(), is(idToRemove));
+        assertThat("name is different", actualCar.getName(), is("TestCar"));
+        assertThat("price is different", actualCar.getPrice(), is(90000));
+    }
+
+    @Test(expected = CarNotFoundException.class)
+    public void testGetOptionalNoEntry() {
+        carDao.findOne(car.getId() + "asd");
     }
 
     @Test
@@ -203,5 +252,6 @@ public class CarDaoTest {
         if (idToRemove != null && !idToRemove.isEmpty()) {
             carDao.remove(idToRemove);
         }
+        assertNull("car is not null, please remove manually", carDao.get(idToRemove));
     }
 }

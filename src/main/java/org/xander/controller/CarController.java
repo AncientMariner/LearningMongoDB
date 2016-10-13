@@ -28,6 +28,7 @@ public class CarController {
     public ModelAndView showAddForm() {
         return new ModelAndView("add_form", "car", new Car());
     }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addContact(@ModelAttribute("car") Car car) {
         if(car.getId() == null) carService.add(car);
