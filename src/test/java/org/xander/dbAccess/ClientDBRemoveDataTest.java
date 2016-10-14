@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ClientDBRemoveDataTest extends ClientDBAccessTest {
 
     @Test
-    public void testUpdate() {
+    public void update() {
     }
 
     private void dropTheCollection() {

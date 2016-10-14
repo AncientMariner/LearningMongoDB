@@ -45,19 +45,19 @@ public class ClientTestTemporaryDB {
     }
 
     @Test
-    public void testData() {
+    public void data() {
 //        modifyData();
         printValues(collection.find());
     }
 
-    private void testCarsTemporaryDatabase() {
+    private void carsTemporaryDatabase() {
         MongoIterable<String> dbCollectionNames = database.listCollectionNames();
         String expectedCollectionName = CARS_COLLECTION;
 
         assertThat("expected collection is not present", dbCollectionNames.first(), is(expectedCollectionName));
     }
 
-    private void testDBStatistics() {
+    private void dbStatistics() {
         final String dbstatsCollection = "dbstats";
         Document stats = database.runCommand(new Document(dbstatsCollection, 1));
 
@@ -66,7 +66,7 @@ public class ClientTestTemporaryDB {
         }
     }
 
-    private void testDataRetrival() {
+    private void dataRetrival() {
         try (MongoCursor<Document> cur = collection.find().iterator()) {
             while (cur.hasNext()) {
 
@@ -80,7 +80,7 @@ public class ClientTestTemporaryDB {
         }
     }
 
-    private void testQueryOperator() {
+    private void queryOperator() {
         BasicDBObject query = new BasicDBObject("price", new BasicDBObject("$gt", 50000));
 
 //        collection.find(query).forEach((Block)document -> System.out.println(((Document)document).toJson()));
@@ -93,7 +93,7 @@ public class ClientTestTemporaryDB {
         });
     }
 
-    private void testFactoryFilterQuery() {
+    private void factoryFilterQuery() {
         int descendingOrder = -1;
         FindIterable it = collection.find(and(lt("price", 50000),
                                        gt("price", 20000))).sort(new Document("price", descendingOrder));
@@ -107,7 +107,7 @@ public class ClientTestTemporaryDB {
         }
     }
 
-    private void testProjections() {
+    private void projections() {
         FindIterable it1 = collection.find().projection(excludeId());
         FindIterable it2 = collection.find().projection(exclude("name"));
         FindIterable it3 = collection.find().projection(exclude("_id"));
@@ -121,13 +121,13 @@ public class ClientTestTemporaryDB {
         }
     }
 
-    private void testLimitingDataOutPut() {
+    private void limitingDataOutPut() {
         FindIterable it = collection.find().skip(2).limit(4);
 
         it.forEach((Block<Document>) System.out::println);
     }
 
-    private void testCreateCollection() {
+    private void createCollection() {
         try {
             database.createCollection(CARS_COLLECTION);
         } catch (MongoCommandException e) {
@@ -178,7 +178,7 @@ public class ClientTestTemporaryDB {
         carsCol.insertMany(writes);
     }
 
-    private void testCreateCollectionFromJson() {
+    private void createCollectionFromJson() {
         String collectionName = "continents";
         collection = database.getCollection(collectionName);
 

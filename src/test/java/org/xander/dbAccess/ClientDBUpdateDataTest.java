@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ClientDBUpdateDataTest extends ClientDBAccessTest {
 
     @Test
-    public void testUpdate() {
+    public void update() {
     }
 
     private void replaceOne() {

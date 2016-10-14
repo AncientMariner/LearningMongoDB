@@ -42,7 +42,7 @@ public class CarDaoTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void testRemoveByEntity() {
+    public void removeByEntity() {
         Car actualCar = new Car("Mercedes", 90000);
         carDao.save(actualCar);
 
@@ -60,7 +60,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testRemoveByEntityNotPresent() {
+    public void removeByEntityNotPresent() {
         Car car = new Car();
         String id = car.getId();
         WriteResult writeResult = carDao.removeByEntity(car);
@@ -76,7 +76,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testGetCarById() {
+    public void getCarById() {
         Car car = new Car("TestCar", 90000);
         carDao.save(car);
 
@@ -90,13 +90,13 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testGetOptionalNoEntry() {
+    public void getOptionalNoEntry() {
         exception.expect(CarNotFoundException.class);
         carDao.findOne("asd");
     }
 
     @Test
-    public void testAggregation() {
+    public void aggregation() {
         AggregationResults<ArrayList> aggregate = carDao.aggregate();
         Object result = ((Map.Entry) ((BasicDBObject) ((BasicDBList) aggregate.getRawResults().get("result")).toArray()[2]).entrySet().toArray()[0]).getKey();
 
@@ -104,12 +104,12 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testCollectionPresent() {
+    public void collectionPresent() {
         assertTrue(carDao.collectionPresent(COLLECTION_NAME));
     }
 
     @Test
-    public void testBulkOperation() {
+    public void bulkOperation() {
         Document newDocument1 = new Document("name", "Mercedes").append("price", 150000);
         Document newDocument2 = new Document("name", "Mercedes AMG").append("price", 250000);
 
@@ -120,7 +120,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testCount() {
+    public void count() {
         String key = "name";
         String criteriaDefinition = "Volvo";
 
@@ -128,7 +128,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testExecuteCommand() {
+    public void executeCommand() {
         String jsonCommand = "{ " + "\"count\" : \"" + COLLECTION_NAME + "\"" + " }";
         CommandResult commandResult = carDao.executeCommand(jsonCommand);
 
@@ -136,7 +136,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testExecuteQuery() {
+    public void executeQuery() {
         Query query = new Query().addCriteria(where("name").is("Citroen"));
         List<String> ids = carDao.executeQuery(query);
 
@@ -144,7 +144,7 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testExists() {
+    public void exists() {
         Query query = new Query().addCriteria(where("name").is("Mercedes"));
         boolean exists = carDao.exists(query);
 
@@ -172,7 +172,7 @@ public class CarDaoTest {
 //    }
 
     @Test
-    public void testGetCollection() {
+    public void getCollection() {
         String collectionNameBasedOnClass = carDao.getCollectionNameBasedOnClass(Car.class);
         DBCollection collection = carDao.getCollectionBasedOnName(collectionNameBasedOnClass);
 
@@ -181,21 +181,21 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testGetCollectionNameBasedOnClass() {
+    public void getCollectionNameBasedOnClass() {
         String collectionNameBasedOnClass = carDao.getCollectionNameBasedOnClass(Car.class);
 
         assertThat("collection name is not cars", collectionNameBasedOnClass, is(COLLECTION_NAME));
     }
 
     @Test
-    public void testGetCollectionNamesSet() {
+    public void getCollectionNamesSet() {
         Set<String> collectionSet = carDao.getCollectionNamesSet();
 
         assertThat("collection name is not present in the set", collectionSet.contains(COLLECTION_NAME), is(true));
     }
 
     @Test
-    public void testCustomConverter() {
+    public void customConverter() {
         String carName = "BMW";
         int carPrice = 50000;
         carDao.saveObjectWithCustomConverter(new Car(carName, carPrice));
@@ -205,19 +205,19 @@ public class CarDaoTest {
     }
 
     @Test
-    public void testScriptOperations() {
+    public void scriptOperations() {
         assertTrue("script execution was not successful", carDao.scriptOperations());
     }
 
     @Test
-    public void testStreamCollection() {
+    public void streamCollection() {
         int sizeOfTheCollection = carDao.streamCollection();
 
         assertThat("number of documents is 0", sizeOfTheCollection > 0, is(true));
     }
 
     @Test
-    public void testMapReduce() {
+    public void mapReduce() {
         MapReduceOutput output = carDao.mapReduce();
         Iterable<DBObject> results = output.results();
 

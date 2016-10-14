@@ -31,7 +31,7 @@ public class ClientDBAccessTest {
     }
 
     @Test
-    public void testDBPresent() {
+    public void dbPresent() {
         MongoIterable<String> dbCollectionNames = db.listCollectionNames();
 
         MongoIterable<String> dbCollectionNames1 = dbCollectionNames;

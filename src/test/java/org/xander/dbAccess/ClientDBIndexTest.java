@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class ClientDBIndexTest extends ClientDBAccessTest{
     @Test
-    public void test() {
+    public void index() {
     }
 
     private void createCompoundIndex() {
