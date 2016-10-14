@@ -9,9 +9,9 @@ import com.mongodb.DBObject;
 import com.mongodb.MapReduceOutput;
 import com.mongodb.WriteResult;
 import org.bson.Document;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -23,7 +23,6 @@ import org.xander.model.Car;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,45 +37,14 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CarDaoTest {
     public static final String COLLECTION_NAME = "cars";
-    private Car car;
-    private String idToRemove;
 
     @Autowired private CarDao carDao;
-
-    @Before
-    public void setUp() {
-        carDao.collectionPresent(COLLECTION_NAME);
-        car = new Car("TestCar", 90000);
-        carDao.save(car);
-        List<Car> all = carDao.getAll();
-        for (Car carFromDb : all) {
-            if (carFromDb.getName().equals(car.getName())) {
-                idToRemove = carFromDb.getId();
-            }
-        }
-        assertNotNull("prepared entity does not have an id", idToRemove);
-    }
-
-    @Test
-    public void testSave() throws Exception {
-        assertThat("id is not present", idToRemove != null, is(true));
-        Car actualCar = carDao.get(idToRemove);
-
-        assertThat("id is different", actualCar.getId(), is(idToRemove));
-        assertThat("name is different", actualCar.getName(), is("TestCar"));
-        assertThat("price is different", actualCar.getPrice(), is(90000));
-
-        if (idToRemove != null && !idToRemove.isEmpty()) {
-            carDao.remove(idToRemove);
-
-            assertNull("car is not null", carDao.get(idToRemove));
-        }
-    }
+    @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testRemoveByEntity() {
-        assertThat("id is not present", idToRemove != null, is(true));
-        Car actualCar = carDao.get(idToRemove);
+        Car actualCar = new Car("Mercedes", 90000);
+        carDao.save(actualCar);
 
         assertNotNull("cound not get an entity for delete", actualCar);
 
@@ -86,7 +54,9 @@ public class CarDaoTest {
         assertFalse("there was an update of existing entity", writeResult.isUpdateOfExisting());
         assertNull("upserted id is not null", writeResult.getUpsertedId());
         assertThat("entity was not removed", writeResult.getN(), is(1));
-        assertNull("car was not removed", carDao.get(idToRemove));
+
+        exception.expect(CarNotFoundException.class);
+        carDao.get(actualCar.getId());
     }
 
     @Test
@@ -100,22 +70,29 @@ public class CarDaoTest {
         assertNull("upserted id is not null", writeResult.getUpsertedId());
 
         assertThat("entity was not removed", writeResult.getN(), is(0));
+
+        exception.expect(CarNotFoundException.class);
         assertNull("car was not removed", carDao.get(id));
     }
 
     @Test
-    public void testGetOptional() {
+    public void testGetCarById() {
+        Car car = new Car("TestCar", 90000);
+        carDao.save(car);
+
         String id = car.getId();
-        Optional<Car> carOptional = carDao.findOne(id);
-        Car actualCar = carOptional.get();
-        assertThat("id is different", actualCar.getId(), is(idToRemove));
+        Car actualCar = carDao.findOne(id);
+        assertThat("id is different", actualCar.getId(), is(car.getId()));
         assertThat("name is different", actualCar.getName(), is("TestCar"));
         assertThat("price is different", actualCar.getPrice(), is(90000));
+
+        carDao.remove(id);
     }
 
-    @Test(expected = CarNotFoundException.class)
+    @Test
     public void testGetOptionalNoEntry() {
-        carDao.findOne(car.getId() + "asd");
+        exception.expect(CarNotFoundException.class);
+        carDao.findOne("asd");
     }
 
     @Test
@@ -245,13 +222,5 @@ public class CarDaoTest {
         Iterable<DBObject> results = output.results();
 
         assertThat("there are more than 2 categories of cars", ((ArrayList) results).size(), is(2));
-    }
-
-    @After
-    public void tearDown() {
-        if (idToRemove != null && !idToRemove.isEmpty()) {
-            carDao.remove(idToRemove);
-        }
-        assertNull("car is not null, please remove manually", carDao.get(idToRemove));
     }
 }

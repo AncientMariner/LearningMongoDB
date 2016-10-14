@@ -6,11 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
 import org.xander.dao.CarDao;
-import org.xander.dao.CarNotFoundException;
 import org.xander.model.Car;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -59,16 +57,9 @@ public class CarServiceTest {
         verifyNoMoreInteractions(carDao);
     }
 
-    @Test(expected = CarNotFoundException.class)
-    public void testFindOneNotFound() {
-        when(carDao.findOne(anyString())).thenReturn(Optional.empty());
-
-        carService.findOne(anyString());
-    }
-
     @Test
-    public void testFindOneFound() {
-        when(carDao.findOne(anyString())).thenReturn(Optional.of(car));
+    public void findOne() {
+        when(carDao.findOne(anyString())).thenReturn(car);
 
         carService.findOne(anyString());
 

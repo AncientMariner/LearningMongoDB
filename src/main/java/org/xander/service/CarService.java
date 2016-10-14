@@ -4,11 +4,9 @@ import com.mongodb.WriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xander.dao.CarDao;
-import org.xander.dao.CarNotFoundException;
 import org.xander.model.Car;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CarService {
@@ -36,8 +34,7 @@ public class CarService {
     }
 
     public Car findOne(String id) {
-        Optional<Car> result = carDao.findOne(id);
-        return result.orElseThrow(() -> new CarNotFoundException(id));
+        return carDao.findOne(id);
     }
 
     public WriteResult removeByEntity(Car car) {

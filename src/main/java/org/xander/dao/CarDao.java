@@ -52,12 +52,13 @@ public class CarDao {
     }
 
     public Car get(String id) {
-        return mongoOps.findOne(Query.query(where("id").is(id)), Car.class);
+        Car one = (mongoOps.findOne(Query.query(where("id").is(id)), Car.class));
+        return Optional.ofNullable(one).orElseThrow(() -> new CarNotFoundException(id));
     }
 
-    public Optional<Car> findOne(String id) {
-        Optional<Car> one = Optional.ofNullable(mongoOps.findOne(Query.query(where("id").is(id)), Car.class));
-        return Optional.ofNullable(one.orElseThrow(() -> new CarNotFoundException(id)));
+    public Car findOne(String id) {
+        Car one = mongoOps.findOne(Query.query(where("id").is(id)), Car.class);
+        return Optional.ofNullable(one).orElseThrow(() -> new CarNotFoundException(id));
     }
 
     public List<Car> getAll() {
