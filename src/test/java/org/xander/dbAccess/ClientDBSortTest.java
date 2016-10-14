@@ -8,7 +8,7 @@ import static com.mongodb.client.model.Sorts.ascending;
 
 public class ClientDBSortTest extends ClientDBAccessTest {
     @Test
-    public void testAddCollection() {
+    public void addCollection() {
     }
 
     private void staticSortData() {

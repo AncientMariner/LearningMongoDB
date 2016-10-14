@@ -6,13 +6,11 @@ import org.bson.Document;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ClientDBAggregateDataTest extends ClientDBAccessTest {
 
     @Test
-    public void testUpdate() {
+    public void update() {
     }
 
     private void matchAndGroup() {

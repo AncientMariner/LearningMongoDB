@@ -85,7 +85,7 @@ public class CarServiceTest {
     }
 
     @Test
-    public void testRemoveByEntity() {
+    public void removeByEntity() {
         carService.removeByEntity(car);
 
         verify(carDao).removeByEntity(any(Car.class));

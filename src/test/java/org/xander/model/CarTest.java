@@ -15,7 +15,7 @@ public class CarTest {
     }
 
     @Test
-    public void testConstructor() {
+    public void constructor() {
         Car car1 = new Car("23", "Hyundai", 10000);
         Car car2 = new Car("Hyundai", 10000);
 
@@ -24,29 +24,29 @@ public class CarTest {
     }
 
     @Test
-    public void testToString() {
+    public void stringRepresentation() {
         assertThat("toString is different", car.toString(), is("Car{id='null', name='null', price=0}"));
     }
 
     @Test
-    public void testGetName() {
+    public void getName() {
         car.setName("Nissan");
         assertThat("name is different", car.getName(), is("Nissan"));
     }
 
     @Test
-    public void testGetPrice() {
+    public void getPrice() {
         car.setPrice(90000);
         assertThat("price is different", car.getPrice(), is(90000));
     }
 
     @Test
-    public void testGetId() {
+    public void getId() {
         assertNull("price is different", car.getId());
     }
 
     @Test
-    public void testSetName() {
+    public void setName() {
         car.setName("Nissan");
         assertThat("name is different", car.getName(), is("Nissan"));
         car.setName("Toyota");
@@ -54,7 +54,7 @@ public class CarTest {
     }
 
     @Test
-    public void testSetPrice() {
+    public void setPrice() {
         car.setPrice(90000);
         assertThat("price is different", car.getPrice(), is(90000));
         car.setPrice(190000);

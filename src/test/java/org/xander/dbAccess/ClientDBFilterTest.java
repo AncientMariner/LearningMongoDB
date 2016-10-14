@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 
 public class ClientDBFilterTest extends ClientDBAccessTest {
     @Test
-    public void testAddCollection() {
+    public void addCollection() {
     }
 
     private void conditionalFilter() {
