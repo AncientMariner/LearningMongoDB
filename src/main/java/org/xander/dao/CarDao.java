@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.script.ExecutableMongoScript;
 import org.springframework.data.mongodb.core.script.NamedMongoScript;
 import org.springframework.data.util.CloseableIterator;
@@ -49,6 +50,11 @@ public class CarDao {
 
     public void save(Car car) {
         mongoOps.save(car);
+    }
+
+    public List<Car> updateNameToLowerCase(Car car) {
+        mongoOps.updateFirst(Query.query(where("name").is(car.getName())).addCriteria(where("price").is(50000)), Update.update("name", car.getName().toLowerCase()), Car.class);
+        return mongoOps.find(Query.query(where("name").is(car.getName().toLowerCase())).addCriteria(where("price").is(50000)), Car.class);
     }
 
     public Car get(String id) {
@@ -164,7 +170,7 @@ public class CarDao {
     }
 
     public int streamCollection() {
-        CloseableIterator<Car> closeableIterator = mongoOps.stream(Query.query(where("price").gt(40000)), Car.class);
+        CloseableIterator<Car> closeableIterator = mongoOps.stream(Query.query(where("price").gt(40000).orOperator(where("name").is("Hummer"))), Car.class);
 
         List<Car> cars = new ArrayList<>();
 

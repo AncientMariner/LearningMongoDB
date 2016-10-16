@@ -51,7 +51,7 @@ public class CarDaoTest {
         WriteResult writeResult = carDao.removeByEntity(actualCar);
 
         assertTrue("entity was not acknowledged", writeResult.wasAcknowledged());
-        assertFalse("there was an update of existing entity", writeResult.isUpdateOfExisting());
+        assertFalse("there was an updateNameToLowerCase of existing entity", writeResult.isUpdateOfExisting());
         assertNull("upserted id is not null", writeResult.getUpsertedId());
         assertThat("entity was not removed", writeResult.getN(), is(1));
 
@@ -66,7 +66,7 @@ public class CarDaoTest {
         WriteResult writeResult = carDao.removeByEntity(car);
 
         assertTrue("entity was not acknowledged", writeResult.wasAcknowledged());
-        assertFalse("there was an update of existing entity", writeResult.isUpdateOfExisting());
+        assertFalse("there was an updateNameToLowerCase of existing entity", writeResult.isUpdateOfExisting());
         assertNull("upserted id is not null", writeResult.getUpsertedId());
 
         assertThat("entity was not removed", writeResult.getN(), is(0));
@@ -88,6 +88,14 @@ public class CarDaoTest {
 
         carDao.remove(id);
     }
+
+    @Test
+    public void updateEntity() {
+        Car renault = new Car("Renault", 50000);
+        List<Car> cars = carDao.updateNameToLowerCase(renault);
+        assertThat("where is no car updated", cars.get(0).getName(), is(renault.getName().toLowerCase()));
+    }
+
 
     @Test
     public void getOptionalNoEntry() {
