@@ -91,7 +91,7 @@ public class CarDaoTest {
 
     @Test
     public void updateEntity() {
-        Car renault = new Car("Renault", 50000);
+        Car renault = new Car("renault", 50000);
         List<Car> cars = carDao.updateNameToLowerCase(renault);
         assertThat("where is no car updated", cars.get(0).getName(), is(renault.getName().toLowerCase()));
     }
@@ -110,6 +110,13 @@ public class CarDaoTest {
 
         assertThat("price field is not present", result.equals("price"), is(true));
     }
+
+    @Test
+    public void entityWithLikeQuery() {
+        List<Car> entityLikeQuery = carDao.getEntityLikeQuery();
+        assertThat("there are no entries", entityLikeQuery.size(), is(2));
+    }
+
 
     @Test
     public void collectionPresent() {

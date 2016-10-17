@@ -53,8 +53,13 @@ public class CarDao {
     }
 
     public List<Car> updateNameToLowerCase(Car car) {
-        mongoOps.updateFirst(Query.query(where("name").is(car.getName())).addCriteria(where("price").is(50000)), Update.update("name", car.getName().toLowerCase()), Car.class);
-        return mongoOps.find(Query.query(where("name").is(car.getName().toLowerCase())).addCriteria(where("price").is(50000)), Car.class);
+        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));;
+//        Update updateToNewValue = Update.update("name", car.getName().toLowerCase());
+
+        Update updateAnotherWay = new Update();
+        updateAnotherWay.set("name", car.getName());
+
+        return mongoOps.find(new Query().addCriteria(where("name").is(car.getName().toLowerCase()).and("price").is(50000)), Car.class);
     }
 
     public Car get(String id) {
@@ -69,6 +74,16 @@ public class CarDao {
 
     public List<Car> getAll() {
         return mongoOps.findAll(Car.class);
+    }
+
+    public List<Car> getEntityLikeQuery() {
+        String tagName = "Merc";
+
+        Query query = new Query();
+        query.limit(2);
+        query.addCriteria(where("name").regex(tagName));
+
+        return mongoOps.find(query, Car.class);
     }
 
     public void remove(String id) {

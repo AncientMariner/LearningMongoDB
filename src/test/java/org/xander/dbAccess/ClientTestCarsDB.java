@@ -28,7 +28,7 @@ import static com.mongodb.client.model.Projections.excludeId;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ClientTestTemporaryDB {
+public class ClientTestCarsDB {
     private MongoClient mongoClient;
     private MongoDatabase database;
 
