@@ -42,6 +42,13 @@ public class CarDaoTest {
     @Rule public final ExpectedException exception = ExpectedException.none();
 
     @Test
+    public void saveImage() {
+        String imageName = "Capture.PNG";
+        String actualFileName = carDao.saveImage(imageName);
+        assertThat("file names are different", actualFileName, is(imageName));
+    }
+
+    @Test
     public void removeByEntity() {
         Car actualCar = new Car("Mercedes", 90000);
         carDao.save(actualCar);

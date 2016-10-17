@@ -2,6 +2,7 @@ package org.xander.dao;
 
 import com.mongodb.BulkWriteResult;
 import com.mongodb.CommandResult;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceCommand;
@@ -9,6 +10,9 @@ import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSInputFile;
 import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +38,15 @@ import org.springframework.data.util.CloseableIterator;
 import org.springframework.stereotype.Repository;
 import org.xander.model.Car;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.Assert.assertTrue;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
@@ -51,6 +59,41 @@ public class CarDao {
 
     public void save(Car car) {
         mongoOps.save(car);
+    }
+
+    public String saveImage(String imageName) {
+        File file = FileSystems.getDefault().getPath(".", imageName).toFile();
+        assertTrue("file not found", file.exists());
+
+        DBCollection collectionBasedOnName = getCollectionBasedOnName(getCollectionNameBasedOnClass(Car.class));
+        DB db = collectionBasedOnName.getDB();
+
+        GridFS gfsPhoto = new GridFS(db, "photo");
+        GridFSInputFile gfsFile = null;
+        String filename = null;
+        try {
+            gfsFile = gfsPhoto.createFile(file);
+            gfsFile.setFilename(imageName);
+            gfsFile.save();
+            filename = ((GridFSDBFile) gfsPhoto.getFileList().getCollection().findOne()).getFilename();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            gfsPhoto.remove(imageName);
+        }
+//        gfsPhoto.getFileList().forEachRemaining(System.out::println);
+//        GridFSDBFile one = gfsPhoto.findOne("Capture.PNG");
+
+//        String newName = "newName.PNG";
+//        GridFS gfsPhoto1 = new GridFS(db, "photo");
+//        GridFSDBFile one = gfsPhoto.findOne(imageName);
+//        try {
+//            one.writeTo(newName);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return filename;
     }
 
     public List<Car> updateNameToLowerCase(Car car) {
