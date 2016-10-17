@@ -1,1 +1,3 @@
 mongoimport --db test --collection restaurants --drop --file primer-dataset.json
+
+mongoexport -d test_another -c cars -o cars.json
