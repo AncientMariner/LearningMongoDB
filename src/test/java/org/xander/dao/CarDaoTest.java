@@ -117,6 +117,16 @@ public class CarDaoTest {
         assertThat("there are no entries", entityLikeQuery.size(), is(2));
     }
 
+    @Test
+    public void convertJsonToDbObj() {
+        String json = "{'name':'Audi TT', 'price':102000}";
+        Car car = carDao.convertJsonToDbObject(json);
+
+        assertThat("id is different", car.getId() != null, is(true));
+        assertThat("name is different", car.getName(), is("Audi TT"));
+        assertThat("price is different", car.getPrice(), is(102000));
+    }
+
 
     @Test
     public void collectionPresent() {

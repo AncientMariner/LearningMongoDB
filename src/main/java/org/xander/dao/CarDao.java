@@ -9,6 +9,7 @@ import com.mongodb.MapReduceOutput;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
+import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -92,6 +93,17 @@ public class CarDao {
 
     public WriteResult removeByEntity(Car car) {
         return mongoOps.remove(car);
+    }
+
+
+    public Car convertJsonToDbObject(String json) {
+        DBObject dbObject = (DBObject) JSON.parse(json);
+        mongoOps.insert(dbObject, "cars");
+
+        Car car = mongoOps.findOne(Query.query(where("name").is("Audi TT")), Car.class);
+
+        mongoOps.remove(car);
+        return car;
     }
 
     public boolean collectionPresent(String collectionName) {
