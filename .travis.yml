@@ -1,9 +1,6 @@
 language: java
 sudo: false
 
-gradle check
-gradle assemble
-
 jdk:
   - oraclejdk8
 
