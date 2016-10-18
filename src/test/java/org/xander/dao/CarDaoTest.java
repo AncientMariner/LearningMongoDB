@@ -7,13 +7,8 @@ import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MapReduceOutput;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCommandException;
 import com.mongodb.WriteResult;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,7 +18,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.xander.dbAccess.ClientDBAccessTest;
 import org.xander.model.Car;
 
 import java.util.ArrayList;
@@ -48,76 +42,6 @@ public class CarDaoTest {
     private CarDao carDao;
     @Rule
     public final ExpectedException exception = ExpectedException.none();
-
-
-    @Before
-    public void setUpMongoDB() {
-        MongoClient mongoClient;
-        MongoDatabase database;
-
-        final String CARS_COLLECTION = "cars";
-        final String DATABASE_NAME = "test_another";
-        MongoCollection<Document> collection;
-
-        mongoClient = new MongoClient(ClientDBAccessTest.HOST, ClientDBAccessTest.PORT);
-        database = mongoClient.getDatabase(DATABASE_NAME);
-//        collection = database.getCollection(CARS_COLLECTION);
-
-
-        try {
-            database.createCollection(CARS_COLLECTION);
-        } catch (MongoCommandException e) {
-            database.getCollection(CARS_COLLECTION).drop();
-        }
-        List<Document> writes = new ArrayList<>();
-        MongoCollection<Document> carsCol = database.getCollection(CARS_COLLECTION);
-
-        Document d1 = new Document("_id", 1);
-        d1.append("name", "Audi");
-        d1.append("price", 52642);
-        writes.add(d1);
-
-        Document d2 = new Document("_id", 2);
-        d2.append("name", "Mercedes");
-        d2.append("price", 57127);
-        writes.add(d2);
-
-        Document d3 = new Document("_id", 3);
-        d3.append("name", "Skoda");
-        d3.append("price", 9000);
-        writes.add(d3);
-
-        Document d4 = new Document("_id", 4);
-        d4.append("name", "Volvo");
-        d4.append("price", 29000);
-        writes.add(d4);
-
-        Document d5 = new Document("_id", 5);
-        d5.append("name", "Bentley");
-        d5.append("price", 350000);
-        writes.add(d5);
-
-        Document d6 = new Document("_id", 6);
-        d6.append("name", "Citroen");
-        d6.append("price", 21000);
-        writes.add(d6);
-
-        Document d7 = new Document("_id", 7);
-        d7.append("name", "Hummer");
-        d7.append("price", 41400);
-        writes.add(d7);
-
-        writes.add(new Document("_id", 8)
-                .append("name", "Volkswagen")
-                .append("price", 21600));
-
-        Document d9 = new Document("_id", 9);
-        d9.append("name", "Renault");
-        d9.append("price", 50000);
-        writes.add(d9);
-
-        carsCol.insertMany(writes);
-    }
 
     @Test
     public void saveImage() {
@@ -176,10 +100,11 @@ public class CarDaoTest {
 
     @Test
     public void updateEntity() {
-        Car renault = new Car("renault", 50000);
+        Car renault = new Car("Renault", 50000);
         List<Car> cars = carDao.updateNameToLowerCase(renault);
         assertThat("where is no car updated", cars.get(0).getName(), is(renault.getName().toLowerCase()));
     }
+
 
     @Test
     public void getOptionalNoEntry() {
@@ -198,7 +123,7 @@ public class CarDaoTest {
     @Test
     public void entityWithLikeQuery() {
         List<Car> entityLikeQuery = carDao.getEntityLikeQuery();
-        assertThat("there are no entries", entityLikeQuery.size() > 0, is(true));
+        assertThat("there are no entries", entityLikeQuery.size(), is(2));
     }
 
     @Test

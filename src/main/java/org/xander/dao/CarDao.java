@@ -98,7 +98,7 @@ public class CarDao {
     }
 
     public List<Car> updateNameToLowerCase(Car car) {
-        Query queryToUpdate = new Query().addCriteria(where("name").is("Renault").and("price").is(50000));
+        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));
 //        Update updateToNewValue = Update.update("name", car.getName().toLowerCase());
 
         Update updateAnotherWay = new Update();
