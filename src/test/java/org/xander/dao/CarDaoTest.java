@@ -61,7 +61,7 @@ public class CarDaoTest {
 
         mongoClient = new MongoClient(ClientDBAccessTest.HOST, ClientDBAccessTest.PORT);
         database = mongoClient.getDatabase(DATABASE_NAME);
-        collection = database.getCollection(CARS_COLLECTION);
+//        collection = database.getCollection(CARS_COLLECTION);
 
 
         try {
@@ -110,6 +110,11 @@ public class CarDaoTest {
         writes.add(new Document("_id", 8)
                 .append("name", "Volkswagen")
                 .append("price", 21600));
+
+        Document d9 = new Document("_id", 9);
+        d9.append("name", "Renault");
+        d9.append("price", 50000);
+        writes.add(d9);
 
         carsCol.insertMany(writes);
     }
@@ -176,7 +181,6 @@ public class CarDaoTest {
         assertThat("where is no car updated", cars.get(0).getName(), is(renault.getName().toLowerCase()));
     }
 
-
     @Test
     public void getOptionalNoEntry() {
         exception.expect(CarNotFoundException.class);
@@ -194,7 +198,7 @@ public class CarDaoTest {
     @Test
     public void entityWithLikeQuery() {
         List<Car> entityLikeQuery = carDao.getEntityLikeQuery();
-        assertThat("there are no entries", entityLikeQuery.size(), is(2));
+        assertThat("there are no entries", entityLikeQuery.size() > 0, is(true));
     }
 
     @Test
