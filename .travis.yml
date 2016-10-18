@@ -1,0 +1,20 @@
+.travis.yml
+
+
+language: java
+sudo: false
+
+gradle check
+gradle assemble
+
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  timeout: 86400
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
