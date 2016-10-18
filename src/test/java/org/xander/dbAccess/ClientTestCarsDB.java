@@ -33,7 +33,7 @@ public class ClientTestCarsDB {
     private MongoDatabase database;
 
     private static final String CARS_COLLECTION = "cars";
-    private final String DATABASE_NAME = "test_another";
+    private static final String DATABASE_NAME = "test_another";
     private MongoCollection<Document> collection;
 
 
@@ -96,7 +96,7 @@ public class ClientTestCarsDB {
     private void factoryFilterQuery() {
         int descendingOrder = -1;
         FindIterable it = collection.find(and(lt("price", 50000),
-                                       gt("price", 20000))).sort(new Document("price", descendingOrder));
+                gt("price", 20000))).sort(new Document("price", descendingOrder));
 
         ArrayList<Document> docs = new ArrayList();
         it.into(docs);

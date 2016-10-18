@@ -3,7 +3,7 @@ package org.xander.dbAccess;
 import org.bson.Document;
 import org.junit.Test;
 
-public class ClientDBIndexTest extends ClientDBAccessTest{
+public class ClientDBIndexTest extends ClientDBAccessTest {
     @Test
     public void index() {
     }

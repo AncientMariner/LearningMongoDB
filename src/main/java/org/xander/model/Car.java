@@ -27,11 +27,11 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+        return "Car{"
+                + "id='" + id + '\''
+                + ", name='" + name + '\''
+                + ", price=" + price
+                + '}';
     }
 
     public String getName() {

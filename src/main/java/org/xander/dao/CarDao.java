@@ -55,7 +55,8 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Repository
 public class CarDao {
-    @Autowired private MongoOperations mongoOps;
+    @Autowired
+    private MongoOperations mongoOps;
 
     public void save(Car car) {
         mongoOps.save(car);
@@ -97,7 +98,8 @@ public class CarDao {
     }
 
     public List<Car> updateNameToLowerCase(Car car) {
-        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));;
+        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));
+        ;
 //        Update updateToNewValue = Update.update("name", car.getName().toLowerCase());
 
         Update updateAnotherWay = new Update();
@@ -166,7 +168,7 @@ public class CarDao {
 
     public BulkWriteResult bulkOperation(Document... documents) {
         BulkOperations bulkOperations = mongoOps.bulkOps(BulkOperations.BulkMode.ORDERED,
-                                                         getCollectionNameBasedOnClass(Car.class));
+                getCollectionNameBasedOnClass(Car.class));
         for (Document document : documents) {
             bulkOperations.insert(document);
         }
@@ -220,7 +222,7 @@ public class CarDao {
 
         SimpleMongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(new MongoClient(host, port), dbName);
         MappingMongoConverter converter = new MappingMongoConverter(new DefaultDbRefResolver(mongoDbFactory),
-                                                                    new MongoMappingContext());
+                new MongoMappingContext());
 //        custom converter to avoid saving car object _class field into the db
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory, converter);
@@ -253,21 +255,21 @@ public class CarDao {
 
     public MapReduceOutput mapReduce() {
         DBCollection collection = mongoOps.getCollection(getCollectionNameBasedOnClass(Car.class));
-        String map ="function () { " +
-                        "var priceRange; " +
+        String map = "function () { "
+                + "var priceRange; "
 
-                        "if(this.price > 50000) " +
-                            "priceRange = 'moderate'; " +
-                        "else " +
-                            "priceRange = 'cheap';" +
-
-                        "emit(priceRange, {name: this.name});" +
-                    "}";
-        String reduce = "function (key, values) { "+
-                            " var total = 0; "+
-                            " values.forEach (function(doc) { total += 1; }); " +
-                            " return {cars: total}; " +
-                        "}";
+                + "if(this.price > 50000) "
+                + "priceRange = 'moderate'; "
+                + "else "
+                + "priceRange = 'cheap';"
+                +
+                "emit(priceRange, {name: this.name});"
+                + "}";
+        String reduce = "function (key, values) { "
+                + " var total = 0; "
+                + " values.forEach (function(doc) { total += 1; }); "
+                + " return {cars: total}; "
+                + "}";
 
 //        String map ="function () {"+
 //                                  "emit('size', {countName:1});"+
@@ -280,11 +282,11 @@ public class CarDao {
 //                        "} "+
 //                        "return {countName:total} }";
         MapReduceCommand mapReduceCommand = new MapReduceCommand(collection,
-                                                                 map,
-                                                                 reduce,
-                                                                 null,
-                                                                 MapReduceCommand.OutputType.INLINE,
-                                                                 null);
+                map,
+                reduce,
+                null,
+                MapReduceCommand.OutputType.INLINE,
+                null);
         return collection.mapReduce(mapReduceCommand);
     }
 }

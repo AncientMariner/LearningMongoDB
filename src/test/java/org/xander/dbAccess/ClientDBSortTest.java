@@ -23,7 +23,7 @@ public class ClientDBSortTest extends ClientDBAccessTest {
         FindIterable<Document> iterable = collection
                 .find()
                 .sort(new Document("borough", 1)
-                .append("address.zipcode", 1));
+                           .append("address.zipcode", 1));
         printValues(iterable);
     }
 }

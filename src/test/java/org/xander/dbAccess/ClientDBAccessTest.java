@@ -5,11 +5,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoIterable;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -17,7 +20,7 @@ import static org.junit.Assert.assertThat;
 public class ClientDBAccessTest {
     protected MongoClient mongoClient;
     protected MongoDatabase db;
-    protected final String databaseName = "test";
+    public static final String DATABASE_NAME = "test";
     public static final String HOST = "localhost";
     public static final int PORT = 27017;
     public static final String RESTAURANTS_COLLECTION = "restaurants";
@@ -26,19 +29,16 @@ public class ClientDBAccessTest {
     @Before
     public void setUp() {
         mongoClient = new MongoClient(HOST, PORT);
-        db = mongoClient.getDatabase(databaseName);
+        db = mongoClient.getDatabase(DATABASE_NAME);
         collection = db.getCollection(RESTAURANTS_COLLECTION);
     }
 
     @Test
     public void dbPresent() {
-        MongoIterable<String> dbCollectionNames = db.listCollectionNames();
+        List<String> collectionNames = new ArrayList<>();
+        db.listCollectionNames().forEach((Consumer<? super String>) e -> collectionNames.add(e));
 
-        MongoIterable<String> dbCollectionNames1 = dbCollectionNames;
-        for (String s : dbCollectionNames1) {
-            System.out.println(s);
-        }
-        assertThat("expected collection is not present", dbCollectionNames1.first(), is(RESTAURANTS_COLLECTION));
+        assertThat("there is no restraunt collection present", collectionNames.contains(RESTAURANTS_COLLECTION), is(true));
     }
 
     protected void cleanSpecificDatabase(String collectionName) {

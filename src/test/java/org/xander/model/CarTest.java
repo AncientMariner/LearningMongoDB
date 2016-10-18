@@ -9,6 +9,7 @@ import static org.junit.Assert.assertThat;
 
 public class CarTest {
     private Car car;
+
     @Before
     public void setUp() {
         car = new Car();

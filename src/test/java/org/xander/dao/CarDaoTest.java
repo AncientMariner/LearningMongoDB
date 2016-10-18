@@ -38,8 +38,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class CarDaoTest {
     public static final String COLLECTION_NAME = "cars";
 
-    @Autowired private CarDao carDao;
-    @Rule public final ExpectedException exception = ExpectedException.none();
+    @Autowired
+    private CarDao carDao;
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void saveImage() {
@@ -164,7 +166,7 @@ public class CarDaoTest {
         String jsonCommand = "{ " + "\"count\" : \"" + COLLECTION_NAME + "\"" + " }";
         CommandResult commandResult = carDao.executeCommand(jsonCommand);
 
-        assertThat("size of the collection is 0", (Integer)commandResult.get("n") > 0, is(true));
+        assertThat("size of the collection is 0", (Integer) commandResult.get("n") > 0, is(true));
     }
 
     @Test

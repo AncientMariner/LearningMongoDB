@@ -18,11 +18,14 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @ContextConfiguration(locations = {"classpath:/org/xander/service/applicationContext-service.xml",
-                                   "classpath:/org/xander/model/applicationContext-dao.xml"})
+        "classpath:/org/xander/model/applicationContext-dao.xml"})
 public class CarServiceTest {
-    @Mock private CarDao carDao;
-    @Mock private Car car;
-    @InjectMocks private CarService carService;
+    @Mock
+    private CarDao carDao;
+    @Mock
+    private Car car;
+    @InjectMocks
+    private CarService carService;
 
     @Before
     public void setUp() {
