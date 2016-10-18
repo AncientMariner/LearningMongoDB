@@ -1,6 +1,24 @@
 language: java
 services: mongodb
-#sudo: false
+
+
+before_script:
+  - sleep 15
+  - mongo mydb_test --eval 'db.addUser("travis", "test");'
+  - mongo mydb_test --eval ' db.mydb_test.insert({  "name" : "Audi", "price" : 92000 } );
+                             db.mydb_test.insert({ "name" : "Mercedes", "price" : 57127 } );
+                             db.mydb_test.insert({  "name" : "Volvo", "price" : 29000 } );
+                             db.mydb_test.insert({  "name" : "Bentley", "price" : 350000 } );
+                             db.mydb_test.insert({  "name" : "Citroen", "price" : 21000 } );
+                             db.mydb_test.insert({"name" : "Hummer", "price" : 41400 } );
+                             db.mydb_test.insert({ "name" : "Volkswagen", "price" : 21600 } );
+                             db.mydb_test.insert({ "name" : "Mercury", "price" : "65555" } );
+                             db.mydb_test.insert({  "name" : "Ford", "price" : 90000 } );
+                             db.mydb_test.insert({  "name" : "Nissan", "price" : 70000 } );
+                             db.mydb_test.insert({  "name" : "renault", "price" : 50000 } );
+                             db.mydb_test.insert({  "name" : "BMW", "price" : 50000 } );
+                             db.mydb_test.insert({ "name" : "Mercedes", "price" : 150000} );
+                             db.mydb_test.insert({  "name" : "Mercedes AMG", "price" : 250000} ); '
 
 jdk:
   - oraclejdk8
