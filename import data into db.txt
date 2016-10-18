@@ -1,3 +1,20 @@
 mongoimport --db test --collection restaurants --drop --file primer-dataset.json
 
 mongoexport -d test_another -c cars -o cars.json
+
+create dump
+mongodump
+then from the backup directory
+mongorestore
+
+
+
+This command checks the status of all running mongod instances
+and return counters of database operations
+
+mongostat
+
+his command tracks and reports the read
+and write activity of MongoDB instance on a collection basis
+
+mongotop  (   mongotop 30 - every 30 seconds )

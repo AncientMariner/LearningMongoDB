@@ -1,0 +1,23 @@
+
+db.cars.find().pretty().limit(5)
+db.cars.find().pretty().skip(5)
+
+db.cars.find({ $or: [ {name: "renault"}, {name: "BMW"} ]})
+
+db.cars.update({name: "Mercury"}, {$set: {price: "65555"}})
+
+db.cars.save({name: "Buick", price: "85001"})
+
+remove 1 item
+db.cars.remove({name: "Buick"}, 1)
+
+
+sort desc
+db.cars.find().sort({name: -1})
+asc
+db.cars.find().sort({name: 1})
+
+create index
+>db.COLLECTION_NAME.ensureIndex({name: 1})
+
+db.cars.aggregate([{$group: {_id: "$name", total: {$sum: 1} } } ])
