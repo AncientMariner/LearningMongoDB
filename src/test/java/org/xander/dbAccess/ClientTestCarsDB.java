@@ -24,7 +24,6 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
 import static com.mongodb.client.model.Filters.lt;
 import static com.mongodb.client.model.Projections.exclude;
-import static com.mongodb.client.model.Projections.excludeId;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -108,10 +107,10 @@ public class ClientTestCarsDB {
     }
 
     private void projections() {
-        FindIterable it1 = collection.find().projection(excludeId());
-        FindIterable it2 = collection.find().projection(exclude("name"));
+//        FindIterable it1 = collection.find().projection(excludeId());
+//        FindIterable it2 = collection.find().projection(exclude("name"));
         FindIterable it3 = collection.find().projection(exclude("_id"));
-        FindIterable it4 = collection.find().projection(exclude("name", "price"));
+//        FindIterable it4 = collection.find().projection(exclude("name", "price"));
 
         ArrayList<Document> docs = new ArrayList();
         it3.into(docs);

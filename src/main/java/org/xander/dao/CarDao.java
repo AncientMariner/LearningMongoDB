@@ -98,8 +98,7 @@ public class CarDao {
     }
 
     public List<Car> updateNameToLowerCase(Car car) {
-        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));
-        ;
+//        Query queryToUpdate = new Query().addCriteria(where("name").is(car.getName()).and("price").is(50000));
 //        Update updateToNewValue = Update.update("name", car.getName().toLowerCase());
 
         Update updateAnotherWay = new Update();
@@ -236,9 +235,8 @@ public class CarDao {
         // Register script and call it later
         String scriptName = "echo";
         scriptOps.register(new NamedMongoScript(scriptName, echoScript));
-        Object resultOfScriptExecution = scriptOps.call(scriptName, "Date()");
-        boolean echo = mongoOps.scriptOps().exists(scriptName);
-        return echo;
+//        Object resultOfScriptExecution = scriptOps.call(scriptName, "Date()");
+        return mongoOps.scriptOps().exists(scriptName);
     }
 
     public int streamCollection() {

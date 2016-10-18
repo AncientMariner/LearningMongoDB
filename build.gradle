@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
 
 group = 'LearningMongoDB'
 version = '1.0-SNAPSHOT'
@@ -14,19 +15,18 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-
-
 repositories {
     // same as maven central
-//    jcenter()
-     maven { url "http://repo.maven.apache.org/maven2" }
+    jcenter()
+//     maven { url "http://repo.maven.apache.org/maven2" }
 }
 
-configurations { providedCompile }
-
 dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile group: 'org.mockito', name: 'mockito-all', version:'1.10.19'
+
     compile group: 'junit', name: 'junit', version:'4.12'
-    compile group: 'org.mockito', name: 'mockito-all', version:'1.10.19'
     compile group: 'org.springframework', name: 'spring-core', version:'4.3.3.RELEASE'
     compile group: 'org.springframework', name: 'spring-web', version:'4.3.3.RELEASE'
     compile group: 'org.springframework', name: 'spring-webmvc', version:'4.3.3.RELEASE'
@@ -38,8 +38,7 @@ dependencies {
     compile group: 'log4j', name: 'log4j', version:'1.2.17'
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.5'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.5'
-//    providedCompile group: 'javax.servlet', name: 'servlet-api', version:'2.5'
-    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
 }
 
 checkstyle {
@@ -48,4 +47,34 @@ checkstyle {
     ignoreFailures = true
     //checkstyleAcceptanceTests.ignoreFailures = true
 }
+
+
+task customFindbugs(type: FindBugs) {
+    ignoreFailures = true
+    effort = "default"
+    reportLevel = "medium"
+    classes = files("$project.buildDir/classes")
+    excludeFilter = file("$rootProject.rootDir/config/findbugs/exclude.xml")
+
+    source = fileTree('src/')
+    classpath = files()
+    reports {
+        xml.enabled = false
+        xml.withMessages = true
+        html.enabled = !xml.isEnabled()
+        xml.destination "$project.buildDir/reports/findbugs/findbugs-output.xml"
+        html.destination "$project.buildDir/reports/findbugs/findbugs-output.html"
+    }
+}
+
+//findbugsMain {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}
+
+//findbugs {
+//    ignoreFailures = true
+//}
 
