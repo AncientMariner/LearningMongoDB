@@ -3,8 +3,8 @@ services: mongodb
 #sudo: false
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install -y mongodb-org=3.2.9 mongodb-org-server=3.2.9 mongodb-org-shell=3.2.9 mongodb-org-mongos=3.2.9 mongodb-org-tools=3.2.9
+#  - sudo apt-get update
+#  - sudo apt-get install -y mongodb-org=3.2.9 mongodb-org-server=3.2.9 mongodb-org-shell=3.2.9 mongodb-org-mongos=3.2.9 mongodb-org-tools=3.2.9
   - sleep 15 #mongo may not be responded directly. See http://docs.travis-ci.com/user/database-setup/#MongoDB
   - mongo --version
 #  - mongo --eval 'db.mydb_test.insert({"name": "Mercedes AMG", "price" : 250000});'
