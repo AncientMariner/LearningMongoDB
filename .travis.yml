@@ -4,7 +4,7 @@ services: mongodb
 
 before_script:
   - sleep 15
-  - mongo mydb_test --eval ' db.mydb_test.insert({"name": "Mercedes AMG", "price" : 250000});'
+  - mongo --eval ' db.mydb_test.insert({"name": "Mercedes AMG", "price" : 250000});'
 
 jdk:
   - oraclejdk8
