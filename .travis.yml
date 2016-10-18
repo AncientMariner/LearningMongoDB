@@ -4,8 +4,8 @@ services: mongodb
 
 before_script:
   - sleep 15
-  - mongo mydb_test --eval 'db.addUser("travis", "test");'
-  - mongo mydb_test --eval ' db.mydb_test.insert({  "name" : "Audi", "price" : 92000 } );
+  - mongo mydb_test --eval 'db.addUser("travis", "test");
+   db.mydb_test.insert({  "name" : "Audi", "price" : 92000 } );
                              db.mydb_test.insert({ "name" : "Mercedes", "price" : 57127 } );
                              db.mydb_test.insert({  "name" : "Volvo", "price" : 29000 } );
                              db.mydb_test.insert({  "name" : "Bentley", "price" : 350000 } );
