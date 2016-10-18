@@ -1,6 +1,6 @@
 language: java
 services: mongodb
-sudo: false
+#sudo: false
 
 before_script:
   - sudo apt-get update
