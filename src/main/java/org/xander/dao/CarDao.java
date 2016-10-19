@@ -247,8 +247,9 @@ public class CarDao {
         closeableIterator.forEachRemaining(cars::add);
 //        closeableIterator.forEachRemaining(System.out::println);
 
-//        if we had a new list to create - it is better to use a reference and collect method
-//          rather than to add values to the existing collection
+//          if we had a new list to create - it is better to use a reference
+//          and stream/parallel stream collect method rather than
+//          to add values to the existing mutable collection
 //        cars.stream().map(car -> car.getName()).collect(Collectors.toList());
 
         closeableIterator.close();
