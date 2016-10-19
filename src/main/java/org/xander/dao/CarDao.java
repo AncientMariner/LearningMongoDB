@@ -251,6 +251,7 @@ public class CarDao {
 //          and stream/parallel stream collect method rather than
 //          to add values to the existing mutable collection
 //        cars.stream().map(car -> car.getName()).collect(Collectors.toList());
+//        Map<String, List<Car>> collect = cars.stream().limit(10).collect(Collectors.groupingBy(car -> car.getName()));
 
         closeableIterator.close();
         return cars.size();
