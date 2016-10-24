@@ -51,9 +51,8 @@ public class ClientTestCarsDB {
 
     private void carsTemporaryDatabase() {
         MongoIterable<String> dbCollectionNames = database.listCollectionNames();
-        String expectedCollectionName = CARS_COLLECTION;
 
-        assertThat("expected collection is not present", dbCollectionNames.first(), is(expectedCollectionName));
+        assertThat("expected collection is not present", dbCollectionNames.first(), is(CARS_COLLECTION));
     }
 
     private void dbStatistics() {
@@ -71,7 +70,7 @@ public class ClientTestCarsDB {
 
                 Document doc = cur.next();
 
-                List<Object> list = new ArrayList(doc.values());
+                List<Object> list = new ArrayList<>(doc.values());
                 System.out.print(list.get(1));
                 System.out.print(": ");
                 System.out.println(list.get(2));
@@ -97,7 +96,7 @@ public class ClientTestCarsDB {
         FindIterable it = collection.find(and(lt("price", 50000),
                 gt("price", 20000))).sort(new Document("price", descendingOrder));
 
-        ArrayList<Document> docs = new ArrayList();
+        ArrayList<Document> docs = new ArrayList<>();
         it.into(docs);
 
 //        docs.forEach(document -> System.out.println(document));
@@ -112,7 +111,7 @@ public class ClientTestCarsDB {
         FindIterable it3 = collection.find().projection(exclude("_id"));
 //        FindIterable it4 = collection.find().projection(exclude("name", "price"));
 
-        ArrayList<Document> docs = new ArrayList();
+        ArrayList<Document> docs = new ArrayList<>();
         it3.into(docs);
 
         for (Document doc : docs) {
@@ -121,7 +120,7 @@ public class ClientTestCarsDB {
     }
 
     private void limitingDataOutPut() {
-        FindIterable it = collection.find().skip(2).limit(4);
+        FindIterable<Document> it = collection.find().skip(2).limit(4);
 
         it.forEach((Block<Document>) System.out::println);
     }

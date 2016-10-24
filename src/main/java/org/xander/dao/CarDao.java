@@ -161,8 +161,7 @@ public class CarDao {
                 project("price").andExclude("_id"),
                 sort(Sort.Direction.DESC, "price"));
 
-        AggregationResults<ArrayList> aggregate = mongoOps.aggregate(aggregation, Car.class, ArrayList.class);
-        return aggregate;
+        return mongoOps.aggregate(aggregation, Car.class, ArrayList.class);
     }
 
     public BulkWriteResult bulkOperation(Document... documents) {
@@ -172,8 +171,7 @@ public class CarDao {
             bulkOperations.insert(document);
         }
 
-        BulkWriteResult bulkWriteResult = bulkOperations.execute();
-        return bulkWriteResult;
+        return bulkOperations.execute();
     }
 
     public long countName(String key, String criteriaDefinition) {
