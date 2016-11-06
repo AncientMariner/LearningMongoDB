@@ -45,7 +45,7 @@ public class CarDaoTest {
 
     @Test
     public void saveImage() {
-        String imageName = "Capture.PNG";
+        String imageName = "Capture.png";
         String actualFileName = carDao.saveImage(imageName);
         assertThat("file names are different", actualFileName, is(imageName));
     }
@@ -101,6 +101,8 @@ public class CarDaoTest {
     @Test
     public void updateEntity() {
         Car renault = new Car("Renault", 50000);
+        carDao.save(renault);
+
         List<Car> cars = carDao.updateNameToLowerCase(renault);
         assertThat("where is no car updated", cars.get(0).getName(), is(renault.getName().toLowerCase()));
     }

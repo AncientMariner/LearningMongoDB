@@ -84,7 +84,7 @@ public class CarDao {
             gfsPhoto.remove(imageName);
         }
 //        gfsPhoto.getFileList().forEachRemaining(System.out::println);
-//        GridFSDBFile one = gfsPhoto.findOne("Capture.PNG");
+//        GridFSDBFile one = gfsPhoto.findOne("Capture.png");
 
 //        String newName = "newName.PNG";
 //        GridFS gfsPhoto1 = new GridFS(db, "photo");
