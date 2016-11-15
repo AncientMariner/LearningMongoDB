@@ -46,6 +46,7 @@ public class ClientTestCarsDB {
     @Test
     public void data() {
 //        modifyData();
+        createCollection();
         printValues(collection.find());
     }
 
@@ -134,43 +135,35 @@ public class ClientTestCarsDB {
         List<Document> writes = new ArrayList<>();
         MongoCollection<Document> carsCol = database.getCollection(CARS_COLLECTION);
 
-        Document d1 = new Document("_id", 1);
-        d1.append("name", "Audi");
+        Document d1 = new Document("name", "Audi");
         d1.append("price", 52642);
         writes.add(d1);
 
-        Document d2 = new Document("_id", 2);
-        d2.append("name", "Mercedes");
+        Document d2 = new Document("name", "Mercedes");
         d2.append("price", 57127);
         writes.add(d2);
 
-        Document d3 = new Document("_id", 3);
-        d3.append("name", "Skoda");
+        Document d3 = new Document("name", "Skoda");
         d3.append("price", 9000);
         writes.add(d3);
 
-        Document d4 = new Document("_id", 4);
-        d4.append("name", "Volvo");
+        Document d4 = new Document("name", "Volvo");
         d4.append("price", 29000);
         writes.add(d4);
 
-        Document d5 = new Document("_id", 5);
-        d5.append("name", "Bentley");
+        Document d5 = new Document("name", "Bentley");
         d5.append("price", 350000);
         writes.add(d5);
 
-        Document d6 = new Document("_id", 6);
-        d6.append("name", "Citroen");
+        Document d6 = new Document("name", "Citroen");
         d6.append("price", 21000);
         writes.add(d6);
 
-        Document d7 = new Document("_id", 7);
-        d7.append("name", "Hummer");
+        Document d7 = new Document("name", "Hummer");
         d7.append("price", 41400);
         writes.add(d7);
 
-        writes.add(new Document("_id", 8)
-                .append("name", "Volkswagen")
+        writes.add(new Document("name", "Volkswagen")
                 .append("price", 21600));
 
         carsCol.insertMany(writes);

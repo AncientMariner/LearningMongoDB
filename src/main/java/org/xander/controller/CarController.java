@@ -31,6 +31,9 @@ public class CarController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addContact(@ModelAttribute("car") Car car) {
+        if (car.getId() != null && car.getId().isEmpty()) {
+            car.setId(null);
+        }
         if (car.getId() == null) {
             carService.add(car);
         } else {

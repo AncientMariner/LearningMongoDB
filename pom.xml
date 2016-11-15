@@ -98,7 +98,7 @@
     </dependencies>
 
     <build>
-        <finalName>LearningMongo</finalName>
+        <finalName>LearningMongoDB</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
