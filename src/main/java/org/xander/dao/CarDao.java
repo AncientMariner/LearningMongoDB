@@ -238,7 +238,7 @@ public class CarDao {
     }
 
     public int streamCollection() {
-        CloseableIterator<Car> closeableIterator = mongoOps.stream(Query.query(where("price").gt(40000).orOperator(where("name").is("Hummer"))), Car.class);
+        CloseableIterator<Car> closeableIterator = mongoOps.stream(Query.query(where("price").gt(40000).orOperator(where("name").is("Mercedes"))), Car.class);
 
         List<Car> cars = new ArrayList<>();
 

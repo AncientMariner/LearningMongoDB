@@ -32,7 +32,7 @@ public class ClientTestCarsDB {
     private MongoDatabase database;
 
     private static final String CARS_COLLECTION = "cars";
-    private static final String DATABASE_NAME = "test_another";
+    private static final String DATABASE_NAME = "test_real";
     private MongoCollection<Document> collection;
 
 
@@ -47,7 +47,8 @@ public class ClientTestCarsDB {
     public void data() {
 //        modifyData();
         createCollection();
-        printValues(collection.find());
+        createCollection();
+//        printValues(collection.find());
     }
 
     private void carsTemporaryDatabase() {
