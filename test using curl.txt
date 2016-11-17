@@ -1,0 +1,3 @@
+curl http://localhost:8080/
+
+curl --data "name=BMW&price=90000" http://localhost:8080/add
