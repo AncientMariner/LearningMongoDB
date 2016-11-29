@@ -1,0 +1,3 @@
+//running OWASP Dependency-Check. Scan for vulnerabilities
+
+unzip dependency-check-1.4.3-release.zip && sh dependency-check/bin/dependency-check.sh --project "LearningMongoDB" --scan "."
