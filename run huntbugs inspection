@@ -1,0 +1,1 @@
+mvn one.util:huntbugs-maven-plugin:huntbugs
