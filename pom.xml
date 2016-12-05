@@ -134,6 +134,7 @@
             </plugin>
             <plugin>
                 <groupId>org.owasp</groupId>
+                <version>1.4.3</version>
                 <artifactId>dependency-check-maven</artifactId>
                 <executions>
                     <execution>
@@ -142,6 +143,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>one.util</groupId>
+                <artifactId>huntbugs-maven-plugin</artifactId>
+                <version>0.0.11</version>
             </plugin>
         </plugins>
     </build>
