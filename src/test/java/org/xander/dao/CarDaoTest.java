@@ -65,6 +65,7 @@ public class CarDaoTest {
         assertThat("entity was not removed", writeResult.getN(), is(1));
 
         exception.expect(CarNotFoundException.class);
+        exception.expectMessage("No car entry found with id: <" + actualCar.getId() + ">");
         carDao.get(actualCar.getId());
     }
 
@@ -81,6 +82,7 @@ public class CarDaoTest {
         assertThat("entity was not removed", writeResult.getN(), is(0));
 
         exception.expect(CarNotFoundException.class);
+        exception.expectMessage("No car entry found with id: <" + id + ">");
         assertNull("car was not removed", carDao.get(id));
     }
 
@@ -110,8 +112,10 @@ public class CarDaoTest {
 
     @Test
     public void getOptionalNoEntry() {
+        String carId = "illegalId";
+        exception.expectMessage("No car entry found with id: <" + carId + ">");
         exception.expect(CarNotFoundException.class);
-        carDao.findOne("asd");
+        carDao.findOne(carId);
     }
 
     @Test
