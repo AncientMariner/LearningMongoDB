@@ -145,6 +145,28 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.qulice</groupId>
+                <artifactId>qulice-maven-plugin</artifactId>
+                <version>0.17</version>
+                <configuration>
+                    <license>file:${basedir}/LICENSE</license>
+                    <excludes>
+                        <exclude>checkstyle:/src/test/.*</exclude>
+                        <exclude>checkstyle:/src/main/.*</exclude>
+                        <exclude>pmd:/src/main/.*</exclude>
+                        <exclude>pmd:/src/test/.*</exclude>
+                        <exclude>findbugs:~com.qulice.foo.*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>     
+            <plugin>
                 <groupId>one.util</groupId>
                 <artifactId>huntbugs-maven-plugin</artifactId>
                 <version>0.0.11</version>
